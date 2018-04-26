@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 struct node {
 	int data;
@@ -10,27 +11,31 @@ static struct node *create_node(int data);
 static void append_node(int data);
 static void remove_node(int data);
 
-static void print_list();
-static int list_size(); 
+static void print_list(void);
+static int list_size(void); 
 
 static struct node *head_;
 static struct node *tail_;
 
 int main(void)
 {
-	head_ = NULL;
-	tail_ = NULL;
+	int *input = (int *) malloc(sizeof(*input));
 
-	head_ = create_node(29);
+	printf("Enter a value [-999 when done]: ");
+	scanf("%d", input);
+
+	head_ = create_node(*input);
 	tail_ = head_;
 
-	int i; 
-	for (i = 40; i < 50; i++)
-		append_node(i);
+	for (;;) {
+		printf("Enter a value [-999 when done]: ");
+		scanf("%d", input);
 
-	remove_node(43);
-	remove_node(45);
-	remove_node(48);
+		if (*input == -999)
+			break;
+
+		append_node(*input);
+	}
 
 	print_list();
 	printf("list_size = %d\n", list_size());
@@ -79,7 +84,7 @@ static void print_list()
 	struct node *tmp = head_;
 	while (tmp != NULL){
 		printf("ADDR: %p; DATA: %d; NEXT: %p\n", 
-			tmp, tmp->data, tmp->next);
+			(void *) tmp, tmp->data, (void *) tmp->next);
 		tmp = tmp->next;
 	}
 }
